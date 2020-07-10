@@ -23,7 +23,7 @@ public class HeroTile implements Tile {
 
     @Override
     public void draw(Canvas canvas, int side) {
-
+        HeroImage.draw(canvas, side, side,brush);
     }
 
     @Override

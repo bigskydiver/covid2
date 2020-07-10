@@ -24,7 +24,7 @@ public class WallTile implements Tile {
 
     @Override
     public void draw(Canvas canvas, int side) {
-
+        wallImg.draw(canvas, side, side,brush);
     }
 
     @Override

@@ -25,7 +25,7 @@ public class VirusTile implements Tile {
 
     @Override
     public void draw(Canvas canvas, int side) {
-
+        virusimg.draw(canvas, side, side,brush);
     }
 
     @Override

@@ -11,7 +11,7 @@ public class Hero extends element {
     }
 
 
-    public Position getHeroPos(){
+    public Position getsuperPos(){
         return getPos() ;
 
     }
