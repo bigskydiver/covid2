@@ -6,7 +6,7 @@ public class Movemment {
     public Movemment(element[][] model){
 
       this.model = model;
-
+      Hero hero = getHero();
     }
 
     public boolean Elem(Direction dir , element elem){
@@ -72,6 +72,19 @@ public class Movemment {
         }
     return null;
     }
+    private Hero getHero(){
+        for ( int i = 0 ; i< model.length;++i){
+            for ( int z = 0 ; z< model.length;++z){
+                if(model[i][z].getElement() instanceof Hero) return (Hero) model[i][z].getElement();
+
+
+            }
+
+        }
+        return null;
+    }
+
+
     private Boolean checkIfVirusLocation(Position pos){
         return model[pos.x][pos.y].getElement() instanceof Virus;
     }

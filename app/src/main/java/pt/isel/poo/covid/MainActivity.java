@@ -17,6 +17,8 @@ import pt.isel.poo.covid.model.Loader;
 import pt.isel.poo.covid.model.Movemment;
 import pt.isel.poo.covid.tile.TilePanel;
 import pt.isel.poo.covid.model.Movemment;
+import pt.isel.poo.covid.view.LevelView;
+
 public class MainActivity extends AppCompatActivity {
 
     private Button leftButton;
@@ -51,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
               public void onClick(View v) {
 
                   move.Elem(left, new Hero(null)) ;
+                  new LevelView(panel,nivel);
               }
         }
         );
@@ -60,6 +63,7 @@ public class MainActivity extends AppCompatActivity {
               public void onClick(View v) {
 
                  move.Elem(right, new Hero(null)) ;
+                  new LevelView(panel,nivel);
 
               }
           }

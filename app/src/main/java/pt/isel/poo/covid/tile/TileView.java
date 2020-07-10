@@ -7,6 +7,8 @@ import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.view.View;
 
+import pt.isel.poo.covid.tile.Tile;
+
 public class TileView extends View {
     private static final int MIN_SIDE = 30;
 
