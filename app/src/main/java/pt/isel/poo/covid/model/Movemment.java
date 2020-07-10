@@ -1,6 +1,5 @@
 package pt.isel.poo.covid.model;
 import pt.isel.poo.covid.Position;
-import pt.isel.poo.covid.model.Level;
 
 public class Movemment {
     private final element[][] model;
@@ -10,19 +9,55 @@ public class Movemment {
 
     }
 
-    public void moveHero (Direction dir){
-       Position Heroposition = getHeroLocation();
-        assert Heroposition != null;
-        if(model[Heroposition.x  - dir.x ][Heroposition.y - dir.y].getElement() instanceof Space){
+    public boolean Elem(Direction dir , element elem){
+        Position location = null;
+        boolean moved = false;
 
-           model[Heroposition.x - dir.x ][Heroposition.y - dir.y ]= model[Heroposition.x][Heroposition.y];
-           model[Heroposition.x][Heroposition.y] = new Space(new Position(Heroposition.x,Heroposition.y));
-           model[Heroposition.x- dir.x ][Heroposition.y - dir.y].updatePos(new Position(Heroposition.x - dir.x,Heroposition.y -dir.y));
+        if ( elem instanceof Hero){
+            location = getHeroLocation();
+            assert location != null;
+            checkIfCollided(location,dir);
+        }
 
+        if ( elem instanceof Virus)location = elem.getPos();
+        assert location != null;
+
+        if(model[location.x  - dir.x ][location.y - dir.y].getElement() instanceof Space){
+           model[location.x - dir.x ][location.y - dir.y ]= model[location.x][location.y];
+           model[location.x][location.y] = new Space(new Position(location.x,location.y));
+           model[location.x- dir.x ][location.y - dir.y].updatePos(new Position(location.x - dir.x,location.y -dir.y));
+            moved= true;
        }
 
+        return moved;
     }
 
+
+
+
+
+
+    public void checkIfCollided(Position location,Direction dir){
+
+        if(model[location.x  - dir.x ][location.y - dir.y].getElement() instanceof Virus){
+
+            Elem(dir,(model[location.x  - dir.x ][location.y - dir.y].getElement()));
+            Elem(dir,model[location.x][location.y].getElement());
+        }
+
+    }
+    public void appplyGravity (){
+        Position pos ;
+        Direction dir = new Direction(0,1);
+        while (Elem(dir, new Hero(null)));
+        for ( int i = 0 ; i< model.length;++i) {
+            for (int z = 0; z < model.length; ++z) {
+                pos = new Position(i,z);
+                if (checkIfVirusLocation(pos)) while( Elem(dir, model[i][z].getElement())  );
+
+            }
+        }
+    }
 
 
 
@@ -37,4 +72,10 @@ public class Movemment {
         }
     return null;
     }
+    private Boolean checkIfVirusLocation(Position pos){
+        return model[pos.x][pos.y].getElement() instanceof Virus;
+    }
+
+
+
 }

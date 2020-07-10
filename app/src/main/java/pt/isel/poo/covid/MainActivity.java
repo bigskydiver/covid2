@@ -10,10 +10,13 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.Scanner;
 
+import pt.isel.poo.covid.model.Direction;
+import pt.isel.poo.covid.model.Hero;
 import pt.isel.poo.covid.model.Level;
 import pt.isel.poo.covid.model.Loader;
+import pt.isel.poo.covid.model.Movemment;
 import pt.isel.poo.covid.tile.TilePanel;
-
+import pt.isel.poo.covid.model.Movemment;
 public class MainActivity extends AppCompatActivity {
 
     private Button leftButton;
@@ -27,21 +30,27 @@ public class MainActivity extends AppCompatActivity {
         int currentLvl = 1;
         final int HEIGHT  = 9;
         final int WIDTH = 9;
+        final Direction right = new Direction(-1,0);
+        final Direction left = new Direction(1,0);
         in = new Scanner(FILE_NAME);
-        Level nivel = new Level(0,0,0);
+        final Level nivel = new Level(0,0,0);
 
         try {
             nivel.loadslvl(in);
         } catch (Loader.LevelFormatException e) {
             e.printStackTrace();
         }
-        int levelnbr = 1 ;
         final TilePanel panel = findViewById(R.id.tilePanel) ;
+        final Movemment move =new Movemment(nivel.getModel());
+
+
+
         leftButton = findViewById(R.id.button_left);
         leftButton.setOnClickListener(new View.OnClickListener() {
               @Override
               public void onClick(View v) {
 
+                  move.Elem(left, new Hero(null)) ;
               }
         }
         );
@@ -49,6 +58,8 @@ public class MainActivity extends AppCompatActivity {
         rightButton.setOnClickListener(new View.OnClickListener() {
               @Override
               public void onClick(View v) {
+
+                 move.Elem(right, new Hero(null)) ;
 
               }
           }
