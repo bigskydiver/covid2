@@ -42,10 +42,11 @@ public class LevelView {
     public Tile createTile(element elem){
 
 
-        if ( elem instanceof  Hero) new HeroTile(panel.getContext(), (Hero) elem) ;
+        if ( elem instanceof  Hero) return new HeroTile(panel.getContext(), (Hero) elem) ;
             else if ( elem instanceof Wall) return new WallTile(panel.getContext(),(Wall) elem) ;
             else if ( elem instanceof Virus)return  new VirusTile(panel.getContext(),(Virus) elem) ;
             else if ( elem instanceof TrashCan) return  new TrashTile(panel.getContext(),(TrashCan) elem);
+
         return null;
     }
 

@@ -1,7 +1,13 @@
 package pt.isel.poo.covid.model;
 
+import android.util.Log;
+
 import pt.isel.poo.covid.Position;
 import pt.isel.poo.covid.tile.TilePanel;
+import pt.isel.poo.covid.view.HeroTile;
+import pt.isel.poo.covid.view.TrashTile;
+import pt.isel.poo.covid.view.VirusTile;
+import pt.isel.poo.covid.view.WallTile;
 
 import java.util.Scanner;
 import java.util.ArrayList;
@@ -49,79 +55,112 @@ public class Level {
 
     public void put( int l,int  c, char type){
         Position pos = new Position( l,c);
+
         switch ( type ){
             case '.':
                 initSpace(pos);
-                model[c][l] = space;
+                model[l][c] = space;
                 break;
             case '@':
                 initHero(pos);
-                model[c][l] = hero;
+                model[l][c] = hero;
                 break;
             case 'V':
                 initTrashCan(pos);
-                model[c][l] = trashCan;
+                model[l][c] = trashCan;
                 break;
             case 'X':
                 initWall(pos);
-                model[c][l] = wall;
+                model[l][c] = wall;
                 break;
             case '*':
                 initVirus(pos);
                 virusList.add(virus);
-                model[c][l] = virus;
+                model[l][c] = virus;
                 break;
         }
     }
 
     public element getElement (Position pos){
 
-       return model[pos.x][pos.y];
+       return model[pos.y][pos.x];
    }
 
     public element[][] getModel() {
         return model;
     }
 
-    public Level loadslvl (Scanner in) throws Loader.LevelFormatException {
+    public Level loadslvl (Scanner in, int lvlnbr) throws Loader.LevelFormatException {
         Loader loader = new Loader (in);
 
-     return loader.load(1);
+     return loader.load(lvlnbr);
+
 
     }
+    public void Levelprint(){
+        for (int x = 0 ; x< height;++x){
+            for(int y = 0 ; y< width ; ++y){
 
-    public boolean moveElem(Direction dir , element elem){
-        Position location = null;
+                System.out.print( toString (getElement( new Position(x,y))));
+            }
+            System.out.println();
+        }
+    }
+    public String toString ( element elem){
+        String out = "broken";
+        if ( elem instanceof  Hero) out = "@";
+        else if ( elem instanceof Wall) out = "X" ;
+        else if ( elem instanceof Virus)out = "*";
+        else if ( elem instanceof TrashCan) out = "V";
+        else if ( elem instanceof Space) out = ".";
+        return out;
+    }
+
+
+    public boolean moveVirus(Direction dir,int i) {
         boolean moved = false;
-        location = elem.getPos();
-        if ( elem instanceof Hero){
-            checkIfCollided(location,dir);
+        Position location = getVirus(i).getPos();
+        if (location.x -dir.x < height && location.y - dir.y < width) {
+            if(!checkIfCollided(location, dir)){
+                model[location.x - dir.x ][location.y - dir.y ]= model[location.x][location.y];
+                model[location.x][location.y] = new Space(new Position(location.x,location.y));
+                model[location.x- dir.x ][location.y - dir.y].updatePos(new Position(location.x - dir.x,location.y -dir.y));
+                moved = true;
+            }
         }
 
-        if(model[location.x  - dir.x ][location.y - dir.y].getElement() instanceof Space){
-            model[location.x - dir.x ][location.y - dir.y ]= model[location.x][location.y];
-            model[location.x][location.y] = new Space(new Position(location.x,location.y));
-            model[location.x- dir.x ][location.y - dir.y].updatePos(new Position(location.x - dir.x,location.y -dir.y));
-            moved= true;
-        }
+    return moved;
+    }
+    public void moveHero (Direction dir) {
+        Position location = getHero().getPos();
+        if (location.x - dir.x < height && location.y - dir.y < width) {
 
-        return moved;
+        if (!checkIfCollided(location, dir)) {
+            model[location.x - dir.x][location.y - dir.y] = model[location.x][location.y];
+            model[location.x][location.y] = new Space(new Position(location.x, location.y));
+            model[location.x - dir.x][location.y - dir.y].updatePos(new Position(location.x - dir.x, location.y - dir.y));
+
+            } else if (model[location.x - dir.x][location.y - dir.y].getElement() instanceof Virus) {
+                if(moveVirus(dir, virusList.indexOf(model[location.x - dir.x][location.y - dir.y].getElement()))){
+                    moveHero(dir);
+                }
+
+            }
+
+        }
     }
 
+    public boolean checkIfCollided(Position location,Direction dir){
 
-    public void checkIfCollided(Position location,Direction dir){
-
-        if(model[location.x  - dir.x ][location.y - dir.y].getElement() instanceof Virus){
-
-            moveElem(dir,(model[location.x  - dir.x ][location.y - dir.y].getElement()));
-            moveElem(dir,model[location.x][location.y].getElement());
-        }
+        return!(model[location.x  - dir.x ][location.y - dir.y].getElement() instanceof Space);
 
     }
+
     public element getHero(){
         return hero;
     }
     public  int getVirusLength(){return virusList.size();}
+
     public Virus getVirus ( int i){
 
         return virusList.get(i);

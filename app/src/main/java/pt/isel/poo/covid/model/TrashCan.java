@@ -9,5 +9,7 @@ public class TrashCan extends element {
         super(pos);
     }
 
-
+    boolean kills (){
+        return true;
+    }
 }

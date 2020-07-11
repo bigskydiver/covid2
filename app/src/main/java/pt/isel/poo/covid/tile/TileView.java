@@ -26,7 +26,6 @@ public class TileView extends View {
         tile = t;
         invalidate();
     }
-
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);

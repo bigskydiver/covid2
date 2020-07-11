@@ -39,8 +39,8 @@ public class Loader {
      * @throws LevelFormatException If an error is found in the file
      */
     Level load(int levelNumber) throws LevelFormatException {
-        if (!findHeader(levelNumber))    // Find the header line
-            return null;
+        if (!findHeader(levelNumber))return null;
+
         model = new Level(levelNumber,height,width);    // Build the level model
             loadGrid();                         // Load cells information
         return model;
