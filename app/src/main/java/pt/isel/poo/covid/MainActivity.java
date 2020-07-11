@@ -64,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
         final TimeAnimator animator = new TimeAnimator();
         animator.setTimeListener(new TimeAnimator.TimeListener() {
             int elapsedTime = 0;
-            int interval = 250;
+            int interval = 500;
             @Override
             public void onTimeUpdate(TimeAnimator animation, long totalTime, long deltaTime) {
                 //Handles gravity
@@ -77,10 +77,8 @@ public class MainActivity extends AppCompatActivity {
                         for (int i = 0; i < nivel.getVirusLength(); ++i) {
                         virus = nivel.getVirus(i);
                          nivel.moveVirus(down, i);
-
                         }
-
-                    levelView.init();
+                        levelView.init();
                     } else {
                         elapsedTime += deltaTime;
                     }
@@ -90,7 +88,10 @@ public class MainActivity extends AppCompatActivity {
                     if(nivel.getVirusLength()==0){
                         out.setText( "Level complete");
 
-                    }else out.setText( "Game Over");
+                    }else{
+                        levelView.init();
+                        out.setText( "Game Over");
+                    }
 
                 }
             }

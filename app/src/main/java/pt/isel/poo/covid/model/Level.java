@@ -139,6 +139,7 @@ public class Level {
     public void moveHero (Direction dir) {
         hero = (Hero) getHero();
         Position location = hero.getPos();
+        if (hero.isdead())return;
         if(location.x -dir.x < height && location.y - dir.y < width && location.x -dir.x >= 0 && location.y - dir.y >= 0) {
             if (!checkIfCollided(location, dir)) {
                 model[location.x - dir.x][location.y - dir.y] = model[location.x][location.y];
@@ -155,7 +156,12 @@ public class Level {
         }
     }
     public boolean CheckifDead(Position location , Direction dir){
-        return(model[location.x  - dir.x ][location.y - dir.y].getElement() instanceof TrashCan);
+        if(model[location.x  - dir.x ][location.y - dir.y].getElement() instanceof TrashCan){
+
+            hero.state = true;
+            return true;
+        }
+        return false;
     }
 
 
