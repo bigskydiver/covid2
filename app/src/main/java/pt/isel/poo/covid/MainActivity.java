@@ -31,11 +31,12 @@ public class MainActivity extends AppCompatActivity {
     private TextView out;
     private Scanner in;
     private final String FILE_NAME = "covid_levels.txt";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        int currentLvl = 1;
+        final int currentLvl = 1;
         final int HEIGHT  = 9;
         final int WIDTH = 9;
         final Direction right = new Direction(0,-1);
@@ -84,11 +85,11 @@ public class MainActivity extends AppCompatActivity {
                     }
 
                 }else {
-                    endbutton.setVisibility( View.VISIBLE);
-                    if(nivel.getVirusLength()==0){
-                        out.setText( "WIN");
 
-                    }else out.setText( "Lost");
+                    if(nivel.getVirusLength()==0){
+                        out.setText( "Level complete");
+
+                    }else out.setText( "Game Over");
 
                 }
             }
@@ -98,8 +99,21 @@ public class MainActivity extends AppCompatActivity {
         endbutton = findViewById(R.id.endbutton);
         endbutton.setOnClickListener(new View.OnClickListener() {
               @Override
+
               public void onClick(View v) {
-                  System.exit(0);
+                  String gameState = out.getText().toString();
+                  if( gameState.equals("Game Over"))System.exit(0);
+
+                  if(gameState.equals("Level complete")) {
+                      try {
+                          if(nivel.loadslvl(in,currentLvl+1)==null)out.setText("No more Levels");
+                      } catch (Loader.LevelFormatException e) {
+                          e.printStackTrace();
+                      }
+                  }
+                  if(gameState.equals("No more levels")) System.exit(0);
+
+                  if(gameState.equals("Nothing to Load"))endbutton.setVisibility( View.INVISIBLE);
               }
           }
         );

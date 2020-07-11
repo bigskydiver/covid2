@@ -51,16 +51,17 @@
         app:layout_constraintStart_toEndOf="@+id/button_left" />
 
     <pt.isel.poo.covid.tile.TilePanel
-        app:widthTiles="9"
-        app:heightTiles="9"
         android:id="@+id/tilePanel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        app:backgroundTiles="#00FFFFFF"
+        app:heightTiles="9"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.201" />
+        app:layout_constraintVertical_bias="0.201"
+        app:widthTiles="9" />
 
     <TextView
         android:id="@+id/textView"
