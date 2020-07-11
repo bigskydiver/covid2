@@ -108,6 +108,7 @@ public class MainActivity extends AppCompatActivity {
 
                   if(gameState.equals("Level complete")) {
                       try {
+                          nivel.reset();
                           endbutton.setVisibility(View.VISIBLE);
                           nivel = nivel.loadslvl(in,currentLvl+1);
                           if(nivel==null){
@@ -115,7 +116,9 @@ public class MainActivity extends AppCompatActivity {
                               out.setText("No more Levels");
 
                           }else {
-                              nivel.Levelprint();
+                              levelView=new LevelView(panel,nivel);
+                              levelView.init();
+                              out.setText("");
                               endbutton.setVisibility(View.INVISIBLE);
                           }
                       } catch (Loader.LevelFormatException e) {
