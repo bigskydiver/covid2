@@ -119,29 +119,34 @@ public class Level {
 
     public boolean moveVirus(Direction dir,int i) {
         boolean moved = false;
-        Position location = getVirus(i).getPos();
-        if (location.x -dir.x < height && location.y - dir.y < width) {
-            if(!checkIfCollided(location, dir)){
-                model[location.x - dir.x ][location.y - dir.y ]= model[location.x][location.y];
-                model[location.x][location.y] = new Space(new Position(location.x,location.y));
-                model[location.x- dir.x ][location.y - dir.y].updatePos(new Position(location.x - dir.x,location.y -dir.y));
+        virus = getVirus(i);
+        Position location = virus.getPos();
+        if ( model[location.x - dir.x][location.y - dir.y].getElement() instanceof TrashCan){
+            model[location.x][location.y] = new Space(new Position(location.x, location.y));
+            deleteVirus(i);
+            return true;
+        }
+        if(location.x -dir.x < height && location.y - dir.y < width && location.x -dir.x >= 0 && location.y - dir.y >= 0) {
+            if (!checkIfCollided(location, dir)) {
+                model[location.x - dir.x][location.y - dir.y] = model[location.x][location.y];
+                model[location.x][location.y] = new Space(new Position(location.x, location.y));
+                model[location.x - dir.x][location.y - dir.y].updatePos(new Position(location.x - dir.x, location.y - dir.y));
                 moved = true;
             }
         }
-
     return moved;
     }
     public void moveHero (Direction dir) {
-        Position location = getHero().getPos();
-        if (location.x - dir.x < height && location.y - dir.y < width) {
-
-        if (!checkIfCollided(location, dir)) {
-            model[location.x - dir.x][location.y - dir.y] = model[location.x][location.y];
-            model[location.x][location.y] = new Space(new Position(location.x, location.y));
-            model[location.x - dir.x][location.y - dir.y].updatePos(new Position(location.x - dir.x, location.y - dir.y));
+        hero = (Hero) getHero();
+        Position location = hero.getPos();
+        if(location.x -dir.x < height && location.y - dir.y < width && location.x -dir.x >= 0 && location.y - dir.y >= 0) {
+            if (!checkIfCollided(location, dir)) {
+                model[location.x - dir.x][location.y - dir.y] = model[location.x][location.y];
+                model[location.x][location.y] = new Space(new Position(location.x, location.y));
+                model[location.x - dir.x][location.y - dir.y].updatePos(new Position(location.x - dir.x, location.y - dir.y));
 
             } else if (model[location.x - dir.x][location.y - dir.y].getElement() instanceof Virus) {
-                if(moveVirus(dir, virusList.indexOf(model[location.x - dir.x][location.y - dir.y].getElement()))){
+                if (moveVirus(dir, virusList.indexOf((Virus) model[location.x - dir.x][location.y - dir.y].getElement()))) {
                     moveHero(dir);
                 }
 
@@ -149,6 +154,10 @@ public class Level {
 
         }
     }
+    public boolean CheckifDead(Position location , Direction dir){
+        return(model[location.x  - dir.x ][location.y - dir.y].getElement() instanceof TrashCan);
+    }
+
 
     public boolean checkIfCollided(Position location,Direction dir){
 
@@ -164,6 +173,11 @@ public class Level {
     public Virus getVirus ( int i){
 
         return virusList.get(i);
+
+    }
+    public void deleteVirus ( int i){
+
+        virusList.remove(i);
 
     }
 

@@ -4,7 +4,7 @@ import pt.isel.poo.covid.Position;
 import pt.isel.poo.covid.tile.Tile;
 
 public abstract class element {
-    private Position pos ;
+    public Position pos ;
 
     public element ( Position pos){
         this.pos = pos;
@@ -18,6 +18,9 @@ public abstract class element {
 
     void updatePos (Position newpos){pos = newpos;}
 
+    boolean kills (){
+        return false;
+    }
 
 
 
