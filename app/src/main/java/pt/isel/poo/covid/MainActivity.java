@@ -3,6 +3,7 @@ package pt.isel.poo.covid;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.animation.TimeAnimator;
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -47,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
 
         try {
             in = new Scanner(getAssets().open(FILE_NAME));
-            nivel = nivel.loadslvl(in,1);
+            nivel = nivel.loadslvl(in,currentLvl);
             nivel.Levelprint();
 
         } catch (Loader.LevelFormatException | FileNotFoundException e) {
@@ -85,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
                     }
 
                 }else {
-
+                    endbutton.setVisibility( View.VISIBLE);
                     if(nivel.getVirusLength()==0){
                         out.setText( "Level complete");
 
@@ -98,6 +99,7 @@ public class MainActivity extends AppCompatActivity {
         animator.start();
         endbutton = findViewById(R.id.endbutton);
         endbutton.setOnClickListener(new View.OnClickListener() {
+              @SuppressLint("SetTextI18n")
               @Override
 
               public void onClick(View v) {
@@ -106,7 +108,16 @@ public class MainActivity extends AppCompatActivity {
 
                   if(gameState.equals("Level complete")) {
                       try {
-                          if(nivel.loadslvl(in,currentLvl+1)==null)out.setText("No more Levels");
+                          endbutton.setVisibility(View.VISIBLE);
+                          nivel = nivel.loadslvl(in,currentLvl+1);
+                          if(nivel==null){
+
+                              out.setText("No more Levels");
+
+                          }else {
+                              nivel.Levelprint();
+                              endbutton.setVisibility(View.INVISIBLE);
+                          }
                       } catch (Loader.LevelFormatException e) {
                           e.printStackTrace();
                       }
