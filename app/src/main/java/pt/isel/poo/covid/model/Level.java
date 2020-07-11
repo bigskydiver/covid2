@@ -9,6 +9,7 @@ import pt.isel.poo.covid.view.TrashTile;
 import pt.isel.poo.covid.view.VirusTile;
 import pt.isel.poo.covid.view.WallTile;
 
+import java.io.PrintStream;
 import java.util.Scanner;
 import java.util.ArrayList;
 public class Level {
@@ -123,6 +124,7 @@ public class Level {
         Position location = virus.getPos();
         if ( model[location.x - dir.x][location.y - dir.y].getElement() instanceof TrashCan){
             model[location.x][location.y] = new Space(new Position(location.x, location.y));
+
             deleteVirus(i);
             return true;
         }
@@ -194,5 +196,29 @@ public class Level {
 
     public int getNumber() {
         return levelNumber;
+    }
+
+    public void save(PrintStream output, int currentLvl) {
+        output.printf("#%d %d x %d %n" ,currentLvl,height,width );
+
+        for (int c= 0; c < height; c++) {
+
+            for (int l = 0 ; l < width; l++) {
+                Position posi = new Position(l,c);
+                output.print(getElement(posi).getChar());
+                System.out.print(getElement(posi).getChar());
+                if(l%(width-1) ==0 && l != 0 ){
+                    System.out.println();
+                    output.println();
+
+                }
+
+            }
+
+        }
+
+
+
+
     }
 }

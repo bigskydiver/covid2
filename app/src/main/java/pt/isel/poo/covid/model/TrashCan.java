@@ -8,7 +8,10 @@ public class TrashCan extends element {
     public TrashCan(Position pos) {
         super(pos);
     }
-
+    public char  getChar(){
+        character = 'V';
+        return character;
+    }
     boolean kills (){
         return true;
     }

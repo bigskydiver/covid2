@@ -1,16 +1,21 @@
 package pt.isel.poo.covid;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.animation.TimeAnimator;
 import android.annotation.SuppressLint;
+import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.util.Scanner;
 
 import pt.isel.poo.covid.model.Direction;
@@ -24,27 +29,28 @@ import pt.isel.poo.covid.view.LevelView;
 public class MainActivity extends AppCompatActivity {
     private Hero hero;
     private Virus virus;
-    private Button leftButton;
-    private Button rightButton;
-    private Button endbutton;
+    private Button leftButton,rightButton, endbutton,loadButton,saveButton;
     private LevelView levelView;
     private Level nivel;
     private TextView out;
+    private TextView topPanel;
     private Scanner in;
     private final String FILE_NAME = "covid_levels.txt";
-
+    private final String  SAVED_LEVEL = "saved_levels.txt";
+    private int currentLvl = 1;
+    private int savedLvl ;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        final int currentLvl = 1;
+
         final int HEIGHT  = 9;
         final int WIDTH = 9;
         final Direction right = new Direction(0,-1);
         final Direction left = new Direction(0,1);
         final Direction down = new Direction(-1,0);
         nivel = new Level(1,9,9);
-        System.out.println(" aqui");
+
 
         try {
             in = new Scanner(getAssets().open(FILE_NAME));
@@ -62,6 +68,7 @@ public class MainActivity extends AppCompatActivity {
         hero = (Hero) nivel.getHero();
         out = findViewById(R.id.textView);
         final TimeAnimator animator = new TimeAnimator();
+        //topPanel.setText("Level"+ currentLvl + ", nr de virus: "+nivel.getVirusLength());
         animator.setTimeListener(new TimeAnimator.TimeListener() {
             int elapsedTime = 0;
             int interval = 500;
@@ -132,7 +139,42 @@ public class MainActivity extends AppCompatActivity {
               }
           }
         );
+        saveButton = findViewById(R.id.save_button);
+        saveButton.setOnClickListener(new View.OnClickListener() {
+              @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+              @Override
+              public void onClick(View v) {
+                  try (PrintStream output = new PrintStream(openFileOutput(SAVED_LEVEL, MODE_PRIVATE))) {
+                      SharedPreferences.Editor editor = getSharedPreferences("PreferencesName", MODE_PRIVATE).edit();
+                      editor.putInt("savedLevel", currentLvl);
+                      editor.apply();
 
+                      if (nivel != null) nivel.save(output, currentLvl);
+                      savedLvl= currentLvl;
+                  } catch (IOException e) {
+                      e.printStackTrace();
+                  }
+
+              }
+          }
+        );
+        loadButton = findViewById(R.id.load_Button);
+        loadButton.setOnClickListener(new View.OnClickListener() {
+              @Override
+              public void onClick(View v) {
+                  try {
+                      in = new Scanner( openFileInput(SAVED_LEVEL));
+                      nivel.loadslvl(in,savedLvl);
+                      currentLvl= savedLvl;
+                      levelView = new LevelView(panel,nivel);
+                      hero = (Hero) nivel.getHero();
+                      levelView.init();
+                  } catch (FileNotFoundException | Loader.LevelFormatException e) {
+                      e.printStackTrace();
+                  }
+              }
+        }
+        );
 
 
         leftButton = findViewById(R.id.button_left);
@@ -161,7 +203,7 @@ public class MainActivity extends AppCompatActivity {
         );
 
     }
-
+   
 
 
 }

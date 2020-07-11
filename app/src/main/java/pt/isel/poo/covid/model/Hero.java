@@ -13,8 +13,11 @@ public class Hero extends element {
         super(pos);
     }
 
-    public boolean isdead ( ){
+    public boolean isdead (){
         return state;
     }
+    public char  getChar(){
+        char character = '@';
+        return character;}
 
 }

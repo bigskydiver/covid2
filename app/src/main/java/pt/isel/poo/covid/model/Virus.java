@@ -15,5 +15,9 @@ public class Virus extends element {
         Position location = pos;
         return level.getModel()[location.x - dir.x][location.y - dir.y]instanceof TrashCan;
     }
+    public char  getChar(){
+        character = '*';
+        return character;
+    }
 
 }

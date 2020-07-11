@@ -9,6 +9,9 @@ public class Wall extends element{
     public Wall(Position pos) {
         super(pos);
     }
-
+    public char  getChar(){
+        character = 'X';
+        return character;
+    }
 
 }

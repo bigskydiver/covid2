@@ -8,6 +8,9 @@ public class Space extends element{
     public Space(Position pos) {
         super(pos);
     }
-
+    public char  getChar(){
+        character = '.';
+        return character;
+    }
 
 }
