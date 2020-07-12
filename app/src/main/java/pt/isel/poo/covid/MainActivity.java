@@ -1,5 +1,6 @@
 package pt.isel.poo.covid;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -35,8 +36,9 @@ public class MainActivity extends AppCompatActivity {
     private TextView out;
     private TextView topPanel;
     private Scanner in;
-    private final String FILE_NAME = "covid_levels.txt";
+    private  String FILE_NAME = "covid_levels.txt";
     private final String  SAVED_LEVEL = "saved_levels.txt";
+    private final String  SAVED_TILES ="saved_tiles.txt";
     private int currentLvl = 1;
     private int savedLvl ;
     @SuppressLint("SetTextI18n")
@@ -52,9 +54,18 @@ public class MainActivity extends AppCompatActivity {
         final Direction down = new Direction(-1,0);
         nivel = new Level(1,9,9);
 
-
+        if(savedInstanceState != null){
+            SharedPreferences prefs = getSharedPreferences("PreferencesName", MODE_PRIVATE);
+            currentLvl = prefs.getInt("currentLvl", 0);
+            FILE_NAME = SAVED_TILES;
+            try {
+                in = new Scanner(openFileInput(FILE_NAME));
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
         try {
-            in = new Scanner(getAssets().open(FILE_NAME));
+            if ( savedInstanceState == null)in = new Scanner(getAssets().open(FILE_NAME));
             nivel = nivel.loadslvl(in,currentLvl);
             nivel.Levelprint();
 
@@ -127,6 +138,7 @@ public class MainActivity extends AppCompatActivity {
                               out.setText("No more Levels");
 
                           }else {
+
                               levelView=new LevelView(panel,nivel);
                               levelView.init();
                               out.setText("");
@@ -148,7 +160,9 @@ public class MainActivity extends AppCompatActivity {
               @Override
               public void onClick(View v) {
                   try (PrintStream output = new PrintStream(openFileOutput(SAVED_LEVEL, MODE_PRIVATE))) {
-
+                      SharedPreferences.Editor editor = getSharedPreferences("PreferencesName", MODE_PRIVATE).edit();
+                      editor.putInt("savedLevel", currentLvl);
+                      editor.apply();
 
                       if (nivel != null) nivel.save(output, currentLvl);
                       savedLvl= currentLvl;
@@ -163,12 +177,16 @@ public class MainActivity extends AppCompatActivity {
         loadButton.setOnClickListener(new View.OnClickListener() {
               @Override
               public void onClick(View v) {
+                  SharedPreferences prefs = getSharedPreferences("PreferencesName", MODE_PRIVATE);
+                  savedLvl = prefs.getInt("savedLevel", 0);
                   try {
                       in = new Scanner( openFileInput(SAVED_LEVEL));
-                      nivel.loadslvl(in,savedLvl);
+                      nivel = nivel.loadslvl(in,savedLvl);
                       currentLvl= savedLvl;
-                      levelView = new LevelView(panel,nivel);
                       hero = (Hero) nivel.getHero();
+                      levelView = new LevelView(panel,nivel);
+                     // System.out.println("printing load");
+                     // nivel.Levelprint();
                       levelView.init();
                   } catch (FileNotFoundException | Loader.LevelFormatException e) {
                       e.printStackTrace();
@@ -182,10 +200,10 @@ public class MainActivity extends AppCompatActivity {
         leftButton.setOnClickListener(new View.OnClickListener() {
               @Override
               public void onClick(View v) {
-                  hero = (Hero) nivel.getHero();
+          hero = (Hero) nivel.getHero();
 
-                      nivel.moveHero(left);
-                      levelView.init();
+              nivel.moveHero(left);
+              levelView.init();
 
               }
         }
@@ -205,6 +223,22 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        try (PrintStream output = new PrintStream(openFileOutput(SAVED_TILES, MODE_PRIVATE))) {
+            SharedPreferences.Editor editor = getSharedPreferences("PreferencesName", MODE_PRIVATE).edit();
+            editor.putInt("currentLvl", currentLvl);
+            editor.apply();
 
+            if (nivel != null) nivel.save(output, currentLvl);
+            savedLvl= currentLvl;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
+    }
 }
+
+

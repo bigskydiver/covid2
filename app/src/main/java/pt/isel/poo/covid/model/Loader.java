@@ -69,14 +69,17 @@ public class Loader {
      */
     private void loadGrid() throws LevelFormatException {
         try {
+            System.out.println( " prininting from loader");
             for (int l = 0; l < height; ++lineNumber, ++l) {
                 line = in.nextLine();                  // Read a line of cells
                 if (line.length() > width)               // Verify number of cells in line
                     error("Wrong number of cells in line");
                 for (int c = 0; c < line.length(); c++) {
                     char type = line.charAt(c);
+                    System.out.print(type);
                     model.put(l, c, type);           // Add cell information to the model
                 }
+                System.out.println();
             }
         }
         catch (LevelFormatException lfe) { throw lfe; }

@@ -102,7 +102,7 @@ public class Level {
         for (int x = 0 ; x< height;++x){
             for(int y = 0 ; y< width ; ++y){
 
-                System.out.print( toString (getElement( new Position(x,y))));
+                System.out.print( toString (getElement( new Position(y,x))));
             }
             System.out.println();
         }
@@ -208,9 +208,7 @@ public class Level {
             for (int l = 0 ; l < width; l++) {
                 Position posi = new Position(l,c);
                 output.print(getElement(posi).getChar());
-                System.out.print(getElement(posi).getChar());
                 if(l%(width-1) ==0 && l != 0 ){
-                    System.out.println();
                     output.println();
 
                 }
