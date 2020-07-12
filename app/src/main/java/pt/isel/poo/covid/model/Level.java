@@ -124,7 +124,7 @@ public class Level {
         Position location = virus.getPos();
 
 
-        if (  model[location.x - dir.x][location.y - dir.y].getElement() instanceof TrashCan){
+        if ((location.x -dir.x < height && location.y - dir.y < width && location.x -dir.x >= 0 && location.y - dir.y >= 0)&&  model[location.x - dir.x][location.y - dir.y].getElement() instanceof TrashCan){
             model[location.x][location.y] = new Space(new Position(location.x, location.y));
             model[location.x - dir.x][location.y - dir.y].updatePos(new Position(location.x - dir.x, location.y - dir.y));
             deleteVirus(i);
