@@ -39,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
     private final String  SAVED_LEVEL = "saved_levels.txt";
     private int currentLvl = 1;
     private int savedLvl ;
+    @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,8 +68,10 @@ public class MainActivity extends AppCompatActivity {
 
         hero = (Hero) nivel.getHero();
         out = findViewById(R.id.textView);
+        topPanel= findViewById(R.id.textView2);
+
         final TimeAnimator animator = new TimeAnimator();
-        //topPanel.setText("Level"+ currentLvl + ", nr de virus: "+nivel.getVirusLength());
+        topPanel.setText("Level :"+ currentLvl + ", nr de virus: "+nivel.getVirusLength());
         animator.setTimeListener(new TimeAnimator.TimeListener() {
             int elapsedTime = 0;
             int interval = 500;
@@ -145,9 +148,7 @@ public class MainActivity extends AppCompatActivity {
               @Override
               public void onClick(View v) {
                   try (PrintStream output = new PrintStream(openFileOutput(SAVED_LEVEL, MODE_PRIVATE))) {
-                      SharedPreferences.Editor editor = getSharedPreferences("PreferencesName", MODE_PRIVATE).edit();
-                      editor.putInt("savedLevel", currentLvl);
-                      editor.apply();
+
 
                       if (nivel != null) nivel.save(output, currentLvl);
                       savedLvl= currentLvl;
@@ -203,7 +204,7 @@ public class MainActivity extends AppCompatActivity {
         );
 
     }
-   
+
 
 
 }

@@ -122,9 +122,11 @@ public class Level {
         boolean moved = false;
         virus = getVirus(i);
         Position location = virus.getPos();
-        if ( model[location.x - dir.x][location.y - dir.y].getElement() instanceof TrashCan){
-            model[location.x][location.y] = new Space(new Position(location.x, location.y));
 
+
+        if (  model[location.x - dir.x][location.y - dir.y].getElement() instanceof TrashCan){
+            model[location.x][location.y] = new Space(new Position(location.x, location.y));
+            model[location.x - dir.x][location.y - dir.y].updatePos(new Position(location.x - dir.x, location.y - dir.y));
             deleteVirus(i);
             return true;
         }
