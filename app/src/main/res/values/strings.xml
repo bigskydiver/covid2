@@ -1,3 +1,12 @@
 <resources>
     <string name="app_name">covid</string>
+
+    <string name = "Save">Save</string>
+    <string name = "Load">Load</string>
+    <string name = "Virus">Virus</string>
+    <string name = "Level">Level</string>
+    <string name = "GameOver">Game over</string>
+    <string name = "NothingToLoad">Nothing to load</string>
+    <string name = "LevelCompleted">Level Completed</string>
+    <string name = "noMoreLevels"> No more levels</string>
 </resources>

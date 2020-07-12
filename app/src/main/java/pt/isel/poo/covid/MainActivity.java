@@ -34,14 +34,13 @@ public class MainActivity extends AppCompatActivity {
     private LevelView levelView;
     private Level nivel;
     private TextView out;
-    private TextView topPanel;
+    private TextView levelTopPanel, virusTopPanel;
     private Scanner in;
     private  String FILE_NAME = "covid_levels.txt";
     private final String  SAVED_LEVEL = "saved_levels.txt";
     private final String  SAVED_TILES ="saved_tiles.txt";
     private int currentLvl = 1;
     private int savedLvl ;
-    @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,7 +52,8 @@ public class MainActivity extends AppCompatActivity {
         final Direction left = new Direction(0,1);
         final Direction down = new Direction(-1,0);
         nivel = new Level(1,9,9);
-
+        levelTopPanel = findViewById(R.id.textView2);
+        virusTopPanel = findViewById(R.id.textView3);
         if(savedInstanceState != null){
             SharedPreferences prefs = getSharedPreferences("PreferencesName", MODE_PRIVATE);
             currentLvl = prefs.getInt("currentLvl", 0);
@@ -79,17 +79,20 @@ public class MainActivity extends AppCompatActivity {
 
         hero = (Hero) nivel.getHero();
         out = findViewById(R.id.textView);
-        topPanel= findViewById(R.id.textView2);
 
         final TimeAnimator animator = new TimeAnimator();
-        topPanel.setText("Level :"+ currentLvl + ", nr de virus: "+nivel.getVirusLength());
+        updateflag();
         animator.setTimeListener(new TimeAnimator.TimeListener() {
             int elapsedTime = 0;
-            int interval = 500;
+            int interval = 250;
             @Override
             public void onTimeUpdate(TimeAnimator animation, long totalTime, long deltaTime) {
                 //Handles gravity
                 if(! nivel.CheckifDead( nivel.getHero().pos,down) && !(nivel.getVirusLength()==0)){
+                    if(hero.Hasmoved()){
+                        elapsedTime= 0;
+                        hero.hasmoved = false;
+                    }
                     if (elapsedTime >= interval) {
                         elapsedTime = 0;
 
@@ -102,16 +105,17 @@ public class MainActivity extends AppCompatActivity {
                         levelView.init();
                     } else {
                         elapsedTime += deltaTime;
+
                     }
 
                 }else {
                     endbutton.setVisibility( View.VISIBLE);
                     if(nivel.getVirusLength()==0){
-                        out.setText( "Level complete");
+                        out.setText( getResources().getString(R.string.LevelCompleted));
 
                     }else{
                         levelView.init();
-                        out.setText( "Game Over");
+                        out.setText(getResources().getString(R.string.GameOver));
                     }
 
                 }
@@ -126,16 +130,16 @@ public class MainActivity extends AppCompatActivity {
 
               public void onClick(View v) {
                   String gameState = out.getText().toString();
-                  if( gameState.equals("Game Over"))System.exit(0);
+                  if( gameState.equals(getResources().getString(R.string.GameOver)))System.exit(0);
 
-                  if(gameState.equals("Level complete")) {
+                  if(gameState.equals(getResources().getString(R.string.LevelCompleted))) {
                       try {
                           nivel.reset();
                           endbutton.setVisibility(View.VISIBLE);
                           nivel = nivel.loadslvl(in,currentLvl+1);
                           if(nivel==null){
 
-                              out.setText("No more Levels");
+                              out.setText(getResources().getString(R.string.noMoreLevels));
 
                           }else {
 
@@ -148,9 +152,9 @@ public class MainActivity extends AppCompatActivity {
                           e.printStackTrace();
                       }
                   }
-                  if(gameState.equals("No more levels")) System.exit(0);
+                  if(gameState.equals(getResources().getString(R.string.noMoreLevels))) System.exit(0);
 
-                  if(gameState.equals("Nothing to Load"))endbutton.setVisibility( View.INVISIBLE);
+                  if(gameState.equals(getResources().getString(R.string.NothingToLoad)))endbutton.setVisibility( View.INVISIBLE);
               }
           }
         );
@@ -201,9 +205,8 @@ public class MainActivity extends AppCompatActivity {
               @Override
               public void onClick(View v) {
           hero = (Hero) nivel.getHero();
-
-              nivel.moveHero(left);
-              levelView.init();
+          nivel.moveHero(left);
+          levelView.init();
 
               }
         }
@@ -213,9 +216,8 @@ public class MainActivity extends AppCompatActivity {
               @Override
               public void onClick(View v) {
                hero = (Hero) nivel.getHero();
-
-                      nivel.moveHero(right);
-                      levelView.init();
+              nivel.moveHero(right);
+              levelView.init();
 
               }
           }
@@ -239,6 +241,12 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
+
+    public void updateflag(){
+        levelTopPanel.setText( getResources().getString(R.string.Level) + " :" + currentLvl);
+        virusTopPanel.setText( getResources().getString(R.string.Virus) + " :" + nivel.getVirusLength());
+    }
+
 }
 
 

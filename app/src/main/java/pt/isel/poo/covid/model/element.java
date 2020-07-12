@@ -6,6 +6,7 @@ import pt.isel.poo.covid.tile.Tile;
 public abstract class element {
     public Position pos ;
     public char character;
+    public boolean hasmoved;
     public element ( Position pos){
         this.pos = pos;
     }
@@ -16,13 +17,18 @@ public abstract class element {
 
     element getElement (){return this;}
     //char getChar(){ return null;}
-    void updatePos (Position newpos){pos = newpos;}
+    void updatePos (Position newpos){
+        hasmoved=true;
+        pos = newpos;
+    }
 
     boolean kills (){
         return false;
     }
 
-
+    public boolean Hasmoved(){
+        return hasmoved;
+    }
     public char getChar() {
         return 0;
     }
